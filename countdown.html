@@ -1,0 +1,77 @@
+<html>
+
+<head>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Rubik+Mono+One');
+        #clockdiv {
+            font-family: 'Rubik Mono One', sans-serif;
+            font-size: 70;
+        }
+        .normal{
+              color: rgba(0,0,0,.75);
+        }
+        .end{
+            color: rgba(255,0,0,.90);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="clockdiv" class="normal">
+
+    </div>
+
+    <script language="javascript">
+
+        function getTimeRemaining() {
+            var t = Date.parse(endtime) - Date.parse(new Date());
+            var seconds = Math.floor((t / 1000) % 60);
+            var minutes = Math.floor((t / 1000 / 60) % 60);
+            var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+            var days = Math.floor(t / (1000 * 60 * 60 * 24));
+            return {
+                'total': t,
+                'days': days,
+                'hours': hours,
+                'minutes': minutes,
+                'seconds': seconds
+            };
+        }
+        var timeinterval, endtime;
+
+        function initializeClock() {
+            var clock = document.getElementById('clockdiv');         
+            updateClock();
+            timeinterval = setInterval(updateClock, 1000);
+        }
+        
+        function updateClock() {                
+                let t = getTimeRemaining();
+                let hours = ('0' + t.hours).slice(-2);
+                let minutes = ('0' + t.minutes).slice(-2);
+                let seconds = ('0' + t.seconds).slice(-2);
+
+                let clock = document.querySelector('#clockdiv')
+                clock.innerText = `${hours}:${minutes}:${seconds}`;
+                if (t.total <= 60000) {
+                    document.querySelector('#clockdiv').classList.remove('normal');
+                    document.querySelector('#clockdiv').classList.add('end');
+                }
+                if (t.total <= 0) {
+                    clearInterval(timeinterval);
+                }
+            }
+        endtime = new Date();
+        endtime.setMinutes(endtime.getMinutes() + 45);
+
+        initializeClock();
+
+        document.querySelector('#clockdiv').addEventListener('click',function(){
+            timeinterval = setInterval(updateClock, 1000);
+        })
+    </script>
+</body>
+
+</html>
